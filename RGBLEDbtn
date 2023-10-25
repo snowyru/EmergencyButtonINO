@@ -1,0 +1,41 @@
+const int buttonPin = 10; // choose the pin where your button is connected
+bool isOn = false; // state of the LED sequence
+
+void setup() {
+  for (int i = 2; i < 10; i++) { // Choose pins 2-9
+    pinMode(i, OUTPUT); // Set the pins as outputs
+  }
+  pinMode(buttonPin, INPUT); // Set the button pin as input
+}
+
+// Define function to turn off all LEDs at the same time
+void allLEDsOff(void) {
+  for (int i = 2; i < 10; i++) {
+    digitalWrite(i, LOW);
+  }
+}
+
+// Switch on LEDs in sequence from left to right
+void loop() {
+  int buttonState = digitalRead(buttonPin); // read the state of the button
+  if (buttonState == HIGH) { // if button is pressed
+    isOn = !isOn; // toggle the state of the LED sequence
+    delay(500); // debounce delay
+  }
+
+  if (isOn) { // if LED sequence is on
+    for (int i = 2; i < 9; i++) { // Run loop once for each LED
+      allLEDsOff(); // Turn off all LEDs
+      digitalWrite(i, HIGH); // Turn on current LED
+      delay(200); // Delay of 200 ms,
+      // then repeat loop to move on to next LED
+    }
+    for (int i = 9; i > 2; i--) { // Light LEDs from right to left
+      allLEDsOff();
+      digitalWrite(i, HIGH);
+      delay(200);
+    }
+  } else {
+    allLEDsOff(); // if LED sequence is off, turn off all LEDs
+  }
+}
